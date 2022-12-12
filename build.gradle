@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'application'
+    id 'cpp'
 }
 
 group 'ru.fantasydestiny'
@@ -8,6 +10,7 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
+
 ext {
     javaMainClass = "ru.fantasydestiny.fantasydestiny.Client"
 }
@@ -16,8 +19,13 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     // https://mvnrepository.com/artifact/com.google.guava/guava
     implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.14.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.14.1'
 }
 
 test {
     useJUnitPlatform()
 }
+
