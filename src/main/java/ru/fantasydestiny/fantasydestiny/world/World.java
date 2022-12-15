@@ -19,26 +19,29 @@ public class World {
     public List<Location> getLocations() {
         return locations;
     }
-    public void addLocation(Location L){locations.add(L);}
 
-    public void Save(String WorldName){
+    public void addLocation(Location L) {
+        locations.add(L);
+    }
+
+    public static void save(World obj, String worldName){
         try {
-            FileOutputStream f = new FileOutputStream(WorldName);
+            FileOutputStream f = new FileOutputStream(worldName);
             ObjectOutputStream out = new ObjectOutputStream(f);
-            out.writeObject(this);
+            out.writeObject(obj);
             f.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    public void Get(String WorldName){
+    public static World load(String WorldName){
         try {
             FileInputStream f = new FileInputStream(WorldName);
             ObjectInputStream in = new ObjectInputStream(f);
-            World w=(World) in.readObject();
-            this=w;
+            World w = (World) in.readObject();
             f.close();
-        } catch (IOException e) {
+            return w;
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
