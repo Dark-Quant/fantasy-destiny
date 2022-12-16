@@ -1,48 +1,55 @@
 package ru.fantasydestiny.fantasydestiny.world;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 import java.io.*;
 
-public class World {
+class world{
     private final List<Location> locations = new ArrayList<>();
-    private static World instance = new World();
+    //private static World instance = new World("Worlds/World.json");
 
-    private World() { }
+    private String name;
 
-    public static World getInstance() {
-        return instance;
+    private String describtion;
+    public world() {
     }
+
+    /*public static World getInstance() {
+        return instance;
+    }*/
 
     public List<Location> getLocations() {
         return locations;
     }
+    public void addLocation(Location L){locations.add(L);}
 
-    public void addLocation(Location L) {
-        locations.add(L);
+}
+public class World extends world{
+
+    public World(String path) throws IOException {
+
+        FileReader reader = new FileReader(path);
+
+        StringBuilder builder = new StringBuilder();
+        int charsRead = -1;
+        char[] chars = new char[100];
+        do{
+            charsRead = reader.read(chars,0,chars.length);
+
+            if(charsRead>0)
+                builder.append(chars,0,charsRead);
+        }while(charsRead>0);
+
+        String json = builder.toString();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        world w=objectMapper.readValue(json, world.class);
+
+        File f=new File(path);
+
     }
 
-    public static void save(World obj, String worldName){
-        try {
-            FileOutputStream f = new FileOutputStream(worldName);
-            ObjectOutputStream out = new ObjectOutputStream(f);
-            out.writeObject(obj);
-            f.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public static World load(String WorldName){
-        try {
-            FileInputStream f = new FileInputStream(WorldName);
-            ObjectInputStream in = new ObjectInputStream(f);
-            World w = (World) in.readObject();
-            f.close();
-            return w;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
