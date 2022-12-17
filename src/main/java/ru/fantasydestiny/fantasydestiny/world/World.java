@@ -6,19 +6,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
 
-class world{
+public class World{
+
+    public class json{
+
+        private final String name;
+
+        private final String describtion;
+
+        protected json(String name,String describtion){
+
+            this.name=name;
+
+            this.describtion=describtion;
+
+        }
+    }
     private final List<Location> locations = new ArrayList<>();
-    //private static World instance = new World("Worlds/World.json");
+    private static World instance = new World("World.data");
 
-    private String name;
+    public World(String path) {
 
-    private String describtion;
-    public world() {
+        File f=new File(path);
+
+
+
     }
 
-    /*public static World getInstance() {
+    public static World getInstance() {
         return instance;
-    }*/
+    }
 
     public List<Location> getLocations() {
         return locations;
@@ -26,6 +43,7 @@ class world{
     public void addLocation(Location L){locations.add(L);}
 
 }
+/*
 public class World extends world{
 
     public World(String path) throws IOException {
@@ -48,8 +66,6 @@ public class World extends world{
 
         world w=objectMapper.readValue(json, world.class);
 
-        File f=new File(path);
-
     }
 
-}
+}*/
