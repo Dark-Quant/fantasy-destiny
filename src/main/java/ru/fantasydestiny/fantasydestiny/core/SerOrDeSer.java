@@ -1,54 +1,42 @@
 package ru.fantasydestiny.fantasydestiny.core;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SerOrDeSer {
 
-    static List<Field> getFieldNames(Field[] fields) {
-        return List.of(fields);
-    }
-    static  Boolean isPrimitiveOrWrapper(Field field){
-        if(field.getType().isPrimitive() ||
-                field.getType().getSimpleName().equals("String")||
-                field.getType().getSimpleName().equals("Integer")||
-                field.getType().getSimpleName().equals("Boolean")||
-                field.getType().getSimpleName().equals("Enum")||
-                field.getType().getSimpleName().equals("Double")||
-                field.getType().getSimpleName().equals("Float")||
-                field.getType().getSimpleName().equals("Long"))
-        {
-            return true;
-        }
-        return false;
+    static Boolean isPrimitiveOrWrapper(Field field) {
+        return field.getType().isPrimitive() ||
+                field.getType().getSimpleName().equals("String") ||
+                field.getType().getSimpleName().equals("Enum");
     }
 
-    public void Serialize(Object obj) throws NoSuchMethodException {
+    public void Serialize(Object obj) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
-        Field[] fields=obj.getClass().getFields();
+        Field[] fields = obj.getClass().getFields();
 
-        List<Field> AllFields=getFieldNames(fields);
+        List<Field> allFields = List.of(fields);
 
-        Map<String, Object> ForJson = new HashMap<>();
+        Map<String, Object> forJson = new HashMap<>();
 
-        for(Field field : AllFields){
+        for (Field field : allFields) {
+            if (!field.isAnnotationPresent(Constant.class)) {
+                continue;
+            }
 
-            if(field.isAnnotationPresent(Const.class)){
-                if(isPrimitiveOrWrapper(field)){
-                    ForJson.put(field.getName(),field.get(obj));
-                }
-                else if(field.getType().isEnum()){
-                    ForJson.put(field.getName(),field.getType().getSimpleName());
-                }
-                else {
-                    Method get=field.getType().getMethod("get");
-                    Method size=field.getType().getMethod("size");
-                    int Size=size.invoke(obj);
-                    for(int i=0;i< Size;i++){
-
-                    }
+            if (isPrimitiveOrWrapper(field)) {
+                forJson.put(field.getName(), field.get(obj));
+            } else if (field.getType().isEnum()) {
+                forJson.put(field.getName(), field.getType().getSimpleName());
+            } else {
+                List<Object> list = (ArrayList<Object>) field.get(obj);
+                int Size = list.size();
+                for (int i = 0; i < Size; i++) {
                 }
             }
 
