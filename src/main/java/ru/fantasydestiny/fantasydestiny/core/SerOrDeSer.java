@@ -40,7 +40,7 @@ public class SerOrDeSer {
                     ForJson.put(field.getName(),field.get(obj));
                 }
                 else if(field.getType().isEnum()){
-                    ForJson.put(field.getName(),field.getType().getSimpleName());
+                    ForJson.put(field.getName(),field.get(obj));
                 }
                 else {
                     Method get=field.getType().getMethod("get");
