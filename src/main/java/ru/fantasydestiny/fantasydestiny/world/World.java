@@ -1,6 +1,7 @@
 package ru.fantasydestiny.fantasydestiny.world;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import ru.fantasydestiny.fantasydestiny.core.Const;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,29 +9,38 @@ import java.io.*;
 
 public class World{
 
-    public class json{
+    @Const
+    protected final String title;
 
-        private final String name;
+    @Const
+    protected final String describtion;
 
-        private final String describtion;
+    @Const
+    protected final List<Location> locations = new ArrayList<>();
 
-        protected json(String name,String describtion){
+    private static World instance = new World();
 
-            this.name=name;
+    private World(String title,String describtion) {
 
-            this.describtion=describtion;
+        this.title=title;
 
-        }
+        this.describtion=describtion;
+
     }
-    private final List<Location> locations = new ArrayList<>();
-    private static World instance = new World("World.data");
+    private World() {
 
-    public World(String path) {
+        this.title="title";
 
-        File f=new File(path);
+        this.describtion="describtion";
 
+    }
 
+    public String getTitle(){
+        return this.title;
+    }
 
+    public String getDescribtion(){
+        return this.describtion;
     }
 
     public static World getInstance() {
