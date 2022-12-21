@@ -5,8 +5,6 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.Map;
 
-import static jdk.internal.org.objectweb.asm.commons.Method.getMethod;
-
 public class SerOrDeSer {
 
     static List<Field> getFieldNames(Field[] fields) {
