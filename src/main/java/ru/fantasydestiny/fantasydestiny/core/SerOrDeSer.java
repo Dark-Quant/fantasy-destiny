@@ -62,9 +62,13 @@ public class SerOrDeSer {
                             Names.add(list.get(i));
                         }
                         else {
-                            Names.add(Serialize(list.get(i), folder + name + '/'));
+                            Names.add(Serialize(list.get(i), folder + '/' + name));
                         }
                     }
+                    forJson.put(field.getName(),Names);
+                }
+                else{
+                    forJson.put(field.getName(),Serialize(field.get(obj),folder+'/'+name));
                 }
             }
         }
