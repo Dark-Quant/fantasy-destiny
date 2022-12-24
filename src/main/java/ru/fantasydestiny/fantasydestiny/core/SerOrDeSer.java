@@ -1,5 +1,8 @@
 package ru.fantasydestiny.fantasydestiny.core;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
@@ -39,7 +42,7 @@ public class SerOrDeSer {
         WRAPPER_TYPE_MAP.put(Void.class, void.class);
     }
 
-    public String Serialize(Object obj,String folder) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+    public String Serialize(Object obj,String folder) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException{
 
         Field[] fields = obj.getClass().getDeclaredFields();
 
@@ -69,6 +72,25 @@ public class SerOrDeSer {
                 }
                 else{
                     forJson.put(field.getName(),Serialize(field.get(obj),folder+'/'+name));
+                }
+                File theDir = new File(folder);
+                if (!theDir.exists()){
+                    theDir.mkdirs();
+                }
+                theDir.delete();
+                try(FileWriter json = new FileWriter(folder+'/'+name+".json",false)){
+                    json.write(new ObjectMapper().writeValueAsString(forJson));
+                }
+                catch (IOException e){
+                    System.out.println(e.getMessage());
+                }
+            }
+            else{
+                try(FileWriter data = new FileWriter(folder+'/'+name+".data",false)){
+                    data.write(field.get(obj).);
+                }
+                catch (IOException e){
+                    System.out.println(e.getMessage());
                 }
             }
         }
