@@ -87,7 +87,7 @@ public class SerOrDeSer {
             }
             else{
                 try(FileWriter data = new FileWriter(folder+'/'+name+".data",false)){
-                    data.write(field.get(obj).);
+                    //data.write(field.get(obj).);
                 }
                 catch (IOException e){
                     System.out.println(e.getMessage());
