@@ -8,16 +8,20 @@ import java.util.List;
 import java.io.*;
 
 public class Location {
-    public final String title;
+    public String title;
 
-    public final String description;
-    public final Tiers difficulty;
+    public String description;
+    public Tiers difficulty;
 
 
     public List<Entity> entities = new ArrayList<>();
-    public final List<Location> neighboursLocation = new ArrayList<>();
+    public List<Location> neighboursLocation = new ArrayList<>();
 
     public int limit;
+
+    public Location() {
+
+    }
 
     public Location(String title, String description) {
         this.title = title;

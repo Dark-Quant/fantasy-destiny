@@ -7,11 +7,11 @@ import java.util.List;
 
 public class World{
 
-    public final String title;
+    public String title;
 
-    public final String describtion;
+    public String describtion;
 
-    public final List<Location> locations = new ArrayList<>();
+    public List<Location> locations = new ArrayList<>();
 
     @NotSerialize
     public static World instance = new World();
