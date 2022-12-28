@@ -1,25 +1,40 @@
 package ru.fantasydestiny.fantasydestiny.core;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.*;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.Map;
 
 public class SerOrDeSer {
 
+    final protected Object object;
+
+    protected List<Field> fields;
+    
+    protected Map<String,Object> forJson=new HashMap<>();
+
+    protected SerOrDeSer(Object object) {
+
+        this.object=object;
+
+        this.fields= List.of(object.getClass().getDeclaredFields());
+
+    }
+    public Object getObject(){
+        return object;
+    }
+    public List<Field> getFields(){
+        return fields;
+    }
+
     private static Boolean isPrimitiveOrWrapper(Field field) {
         return field.getType().isPrimitive() ||
-                field.getType().getSimpleName().equals("String") ||
-                field.getType().getSimpleName().equals("Enum");
+                field.getType().getSimpleName().equals("String");
     }
     static Boolean isPrimitiveOrWrapper(Object obj){
         return  obj.getClass().isPrimitive();
     }
 
-    private static List<?> convertObjectToList(Object obj) {
+    protected static List<?> convertObjectToList(Object obj) {
         List<?> list = new ArrayList<>();
         if (obj.getClass().isArray()) {
             list = Arrays.asList((Object[])obj);
@@ -28,7 +43,7 @@ public class SerOrDeSer {
         }
         return list;
     }
-    private static final Map<Class<?>, Class<?>> WRAPPER_TYPE_MAP;
+    protected static final Map<Class<?>, Class<?>> WRAPPER_TYPE_MAP;
     static {
         WRAPPER_TYPE_MAP = new HashMap<Class<?>, Class<?>>(16);
         WRAPPER_TYPE_MAP.put(Integer.class, int.class);
@@ -41,59 +56,16 @@ public class SerOrDeSer {
         WRAPPER_TYPE_MAP.put(Short.class, short.class);
         WRAPPER_TYPE_MAP.put(Void.class, void.class);
     }
-
-    public String Serialize(Object obj,String folder) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException{
-
-        Field[] fields = obj.getClass().getDeclaredFields();
-
-        String name=(String)obj.getClass().getDeclaredField("title").get(obj);
-
-        List<Field> allFields = List.of(fields);
-
-        Map<String, Object> forJson = new HashMap<>();
-
-        for (Field field : allFields) {
-            if (field.isAnnotationPresent(Const.class)) {
-                if (isPrimitiveOrWrapper(field)) {
-                    forJson.put(field.getName(), field.get(obj));
-                }
-                else if(field.getType().getSimpleName().equals("List")){
-                    List<?> list=convertObjectToList(field.get(obj));
-                    List<Object> Names=new ArrayList<>();
-                    for(int i = 0; i<list.size(); i++) {
-                        if(WRAPPER_TYPE_MAP.containsKey(list.get(i).getClass())){
-                            Names.add(list.get(i));
-                        }
-                        else {
-                            Names.add(Serialize(list.get(i), folder + '/' + name));
-                        }
-                    }
-                    forJson.put(field.getName(),Names);
-                }
-                else{
-                    forJson.put(field.getName(),Serialize(field.get(obj),folder+'/'+name));
-                }
-                File theDir = new File(folder);
-                if (!theDir.exists()){
-                    theDir.mkdirs();
-                }
-                theDir.delete();
-                try(FileWriter json = new FileWriter(folder+'/'+name+".json",false)){
-                    json.write(new ObjectMapper().writeValueAsString(forJson));
-                }
-                catch (IOException e){
-                    System.out.println(e.getMessage());
-                }
-            }
-            else{
-                try(FileWriter data = new FileWriter(folder+'/'+name+".data",false)){
-                    //data.write(field.get(obj).);
-                }
-                catch (IOException e){
-                    System.out.println(e.getMessage());
-                }
-            }
+    protected FieldIt FieldItIs(Field field) {
+        if (isPrimitiveOrWrapper(field)) {
+            return FieldIt.isPrimitive;
         }
-        return name;
+        else if(field.getType().getSimpleName().equals("List")){
+            return FieldIt.isList;
+        } else if (field.getType().isEnum()) {
+            return FieldIt.isEnum;
+        } else{
+            return FieldIt.isOtherObject;
+        }
     }
 }

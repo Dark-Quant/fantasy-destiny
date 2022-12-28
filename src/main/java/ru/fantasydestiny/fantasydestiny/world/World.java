@@ -1,26 +1,22 @@
 package ru.fantasydestiny.fantasydestiny.world;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import ru.fantasydestiny.fantasydestiny.core.Const;
+import ru.fantasydestiny.fantasydestiny.core.NotSerialize;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.io.*;
 
 public class World{
 
-    @Const
-    protected final String title;
+    public final String title;
 
-    @Const
-    protected final String describtion;
+    public final String describtion;
 
-    @Const
-    protected final List<Location> locations = new ArrayList<>();
+    public final List<Location> locations = new ArrayList<>();
 
-    private static World instance = new World();
+    @NotSerialize
+    public static World instance = new World();
 
-    private World(String title,String describtion) {
+    public World(String title,String describtion) {
 
         this.title=title;
 
