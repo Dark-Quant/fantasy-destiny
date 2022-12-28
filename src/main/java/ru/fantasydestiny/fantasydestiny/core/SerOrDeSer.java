@@ -30,9 +30,6 @@ public class SerOrDeSer {
         return field.getType().isPrimitive() ||
                 field.getType().getSimpleName().equals("String");
     }
-    static Boolean isPrimitiveOrWrapper(Object obj){
-        return  obj.getClass().isPrimitive();
-    }
 
     protected static List<?> convertObjectToList(Object obj) {
         List<?> list = new ArrayList<>();

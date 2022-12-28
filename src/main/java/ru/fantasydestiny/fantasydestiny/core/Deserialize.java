@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,16 +16,13 @@ public class Deserialize extends SerOrDeSer {
 
     private final String path;
 
-    public Deserialize(Class<?> object , String path){
 
+    public Deserialize(Object object , String path){
         super(object);
-
         this.path = path;
-        this.fields = List.of(object.getDeclaredFields()); // -Ещё раз скомпилируй. Ответь в ds.
     }
 
-
-    public Object read() throws IllegalAccessException {
+    public Object read() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, ClassNotFoundException {
         ObjectMapper mapper = new ObjectMapper();
         try  {
             File file = new File(path);
@@ -37,20 +37,24 @@ public class Deserialize extends SerOrDeSer {
             if(!field.isAnnotationPresent(NotSerialize.class)){
                 /////////
                 FieldIt fieldIs = FieldItIs(field);
-                if (fieldIs == FieldIt.isPrimitive || fieldIs == FieldIt.isEnum) {
-                    field.set(forJson.get(field.getName()),field.getType());
+                if (fieldIs == FieldIt.isPrimitive) {
+                    field.set(object, forJson.get(field.getName()));
+                } else if (field.getType().isEnum()) {
+                    field.set(object, Enum.valueOf((Class<Enum>) field.getType(), (String) forJson.get(field.getName())));
                 } else if (fieldIs == FieldIt.isList) {
                     List<Object> list = new ArrayList();
-                    String[] paths = (String[]) (forJson.get(field.getName()));
+                    List<String> paths = (ArrayList<String>) forJson.get(field.getName());
+                    Type parameter = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
                     for (String path : paths) {
-                        list.add(new Deserialize(field.getType(),(String) forJson.get(field.getName())).read());
+                        list.add(new Deserialize(Class.forName(parameter.getTypeName()).getConstructor().newInstance(), path).read());
                     }
-                    field.set(list, field.getType());
+                    field.set(object, list);
                 }
                 else {
                     field.set(new Deserialize(field.getType(),(String) forJson.get(field.getName())).read(),field.getType());
                 }
             }
+
         }
         return this.getObject();
     }
