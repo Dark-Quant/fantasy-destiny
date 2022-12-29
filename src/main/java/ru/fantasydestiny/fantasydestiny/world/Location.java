@@ -13,6 +13,7 @@ public class Location {
     public String description;
     public Tiers difficulty;
 
+    public String contains;
 
     public List<Entity> entities = new ArrayList<>();
     public List<Location> neighboursLocation = new ArrayList<>();
@@ -58,6 +59,8 @@ public class Location {
     public String getTitle() {
         return title;
     }
+
+    public String getDescription(){ return description; }
 
     public List<Location> getNeighboursLocation() {
         return neighboursLocation;

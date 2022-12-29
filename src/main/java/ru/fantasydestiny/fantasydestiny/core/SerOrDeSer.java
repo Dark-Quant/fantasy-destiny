@@ -6,10 +6,10 @@ import java.util.Map;
 
 public class SerOrDeSer {
 
-    final protected Object object;
+    protected Object object;
 
     protected List<Field> fields;
-    
+
     protected Map<String,Object> forJson=new HashMap<>();
 
     protected SerOrDeSer(Object object) {

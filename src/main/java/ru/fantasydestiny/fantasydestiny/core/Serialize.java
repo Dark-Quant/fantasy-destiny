@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,18 +20,24 @@ public class Serialize extends SerOrDeSer {
 
         super(object);
 
-        try{
-            this.name=(String)object.getClass().getField("title").get(object);
+        try {
+            this.name = (String) object.getClass().getField("title").get(object);
         }
         catch(NoSuchFieldException | IllegalAccessException e){
             System.out.print(e.getMessage());
         }
+            if (path.isEmpty()) {
+                this.path = object.getClass().getName();
+            } else {
+                this.path = path + '/' + object.getClass().getName();
+            }
 
-        if(path.isEmpty()){
-            this.path=name;
+        try {
+
+            object.getClass().getField("contains").set(this.path+'/'+this.name,new String());
         }
-        else{
-            this.path=path+'/'+name;
+        catch(NoSuchFieldException | IllegalAccessException e){
+            System.out.print(e.getMessage());
         }
     }
 

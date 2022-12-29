@@ -2,16 +2,15 @@ package ru.fantasydestiny.fantasydestiny;
 
 import ru.fantasydestiny.fantasydestiny.core.Deserialize;
 import ru.fantasydestiny.fantasydestiny.core.Serialize;
+import ru.fantasydestiny.fantasydestiny.test.TestWorld;
 import ru.fantasydestiny.fantasydestiny.world.Location;
 import ru.fantasydestiny.fantasydestiny.world.World;
 
 public class Client {
     public static void main(String[] args) throws Exception {
-        Deserialize des = new Deserialize(World.class,"World/World.json") ;
-        World world = (World) des.read();
-        //System.out.print();
-        System.out.print(world.locations.get(0).getTitle());
-//        World world = World.getInstance();
+        //new TestWorld();
+        World world = World.getInstance();
+        world.addLocation(new Location());
 //        world.getLocations().add(new Location("My Location"));
 //        world.getLocations().add(new Location("Quantum Spidery Cave"));
 //        world.getLocations().add(new Location("Great Empire"));

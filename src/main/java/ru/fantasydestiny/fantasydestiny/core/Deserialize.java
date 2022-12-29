@@ -22,7 +22,7 @@ public class Deserialize extends SerOrDeSer {
         this.path = path;
     }
 
-    public Object read() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, ClassNotFoundException {
+    public Object read() {
         ObjectMapper mapper = new ObjectMapper();
         try  {
             File file = new File(path);
@@ -35,23 +35,28 @@ public class Deserialize extends SerOrDeSer {
         for (Field field : fields) {
             ///////
             if(!field.isAnnotationPresent(NotSerialize.class)){
-                /////////
-                FieldIt fieldIs = FieldItIs(field);
-                if (fieldIs == FieldIt.isPrimitive) {
-                    field.set(object, forJson.get(field.getName()));
-                } else if (field.getType().isEnum()) {
-                    field.set(object, Enum.valueOf((Class<Enum>) field.getType(), (String) forJson.get(field.getName())));
-                } else if (fieldIs == FieldIt.isList) {
-                    List<Object> list = new ArrayList();
-                    List<String> paths = (ArrayList<String>) forJson.get(field.getName());
-                    Type parameter = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
-                    for (String path : paths) {
-                        list.add(new Deserialize(Class.forName(parameter.getTypeName()).getConstructor().newInstance(), path).read());
+                try {
+                    /////////
+                    FieldIt fieldIs = FieldItIs(field);
+                    if (fieldIs == FieldIt.isPrimitive) {
+                        field.set(object, forJson.get(field.getName()));
+                    } else if (field.getType().isEnum()) {
+                        field.set(object, Enum.valueOf((Class<Enum>) field.getType(), (String) forJson.get(field.getName())));
+                    } else if (fieldIs == FieldIt.isList) {
+                        List<Object> list = new ArrayList();
+                        List<String> paths = (ArrayList<String>) forJson.get(field.getName());
+                        Type parameter = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+                        for (String path : paths) {
+                            list.add(new Deserialize(Class.forName(parameter.getTypeName()).getConstructor().newInstance(), path).read());
+                        }
+                        field.set(object, list);
+                    } else {
+                        field.set(new Deserialize(field.getType(), (String) forJson.get(field.getName())).read(), field.getType());
                     }
-                    field.set(object, list);
                 }
-                else {
-                    field.set(new Deserialize(field.getType(),(String) forJson.get(field.getName())).read(),field.getType());
+                catch (IllegalArgumentException | IllegalAccessException | ClassNotFoundException |
+                       NoSuchMethodException | SecurityException | InstantiationException | InvocationTargetException e){
+                    System.out.print(e.getMessage());
                 }
             }
 

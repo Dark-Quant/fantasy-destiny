@@ -7,6 +7,7 @@ public class Item {
     private final int rarity = 0;
     public native String getTitle();
 
+    public String contains;
 
     public static class Properties {
 

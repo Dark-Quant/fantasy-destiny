@@ -13,6 +13,8 @@ public class World{
 
     public List<Location> locations = new ArrayList<>();
 
+    public String contains;
+
     @NotSerialize
     public static World instance = new World();
 
