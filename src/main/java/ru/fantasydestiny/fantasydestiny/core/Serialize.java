@@ -26,19 +26,19 @@ public class Serialize extends SerOrDeSer {
         catch(NoSuchFieldException | IllegalAccessException e){
             System.out.print(e.getMessage());
         }
-            if (path.isEmpty()) {
-                this.path = object.getClass().getName();
-            } else {
-                this.path = path + '/' + object.getClass().getName();
-            }
-
-        try {
-
-            object.getClass().getField("contains").set(this.path+'/'+this.name,new String());
+        if (path.isEmpty()) {
+            this.path = object.getClass().getName();
+        } else {
+            this.path = path + '/' + object.getClass().getName();
         }
-        catch(NoSuchFieldException | IllegalAccessException e){
-            System.out.print(e.getMessage());
-        }
+
+        //try {
+
+           // object.getClass().getField("contains").set(object,this.path+'/'+this.name);
+        //}
+        //catch(NoSuchFieldException | IllegalAccessException e){
+        //    System.out.print(e.getMessage());
+        //}
     }
 
     public String getName(){

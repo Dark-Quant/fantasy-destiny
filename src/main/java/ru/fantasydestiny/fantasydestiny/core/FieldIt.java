@@ -10,4 +10,8 @@ public enum FieldIt {
 
     isList,
 
+    isArray,
+
+    isString
+
 }

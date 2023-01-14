@@ -9,8 +9,10 @@ import ru.fantasydestiny.fantasydestiny.world.World;
 public class Client {
     public static void main(String[] args) throws Exception {
         //new TestWorld();
-        World world = World.getInstance();
-        world.addLocation(new Location());
+        World world = new World("dfghdfh","wre");
+        world.addLocation(new Location("sfsdf","sdfas"));
+        new Serialize(world,"").write();
+        System.out.println("");
 //        world.getLocations().add(new Location("My Location"));
 //        world.getLocations().add(new Location("Quantum Spidery Cave"));
 //        world.getLocations().add(new Location("Great Empire"));

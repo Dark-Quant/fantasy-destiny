@@ -1,5 +1,6 @@
 package ru.fantasydestiny.fantasydestiny.world;
 
+import ru.fantasydestiny.fantasydestiny.core.ItIsLink;
 import ru.fantasydestiny.fantasydestiny.core.NotSerialize;
 
 import java.util.ArrayList;

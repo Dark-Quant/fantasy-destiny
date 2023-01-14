@@ -15,6 +15,10 @@ public class Location {
 
     public String contains;
 
+    public int temperature;
+
+    public int humidity;
+
     public List<Entity> entities = new ArrayList<>();
     public List<Location> neighboursLocation = new ArrayList<>();
 
